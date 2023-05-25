@@ -23,9 +23,27 @@ function update(updatedTable){
         .update(updatedTable, "*")
 }
 
+async function updateTablesAndReservations(updatedTable, reservation_id) {
+    await knex.transaction(async (trx) => {
+      const [table, reservation] = await Promise.all([
+        trx('tables').select("*").where({ table_id: updatedTable.table_id}).update(updatedTable, "*"),
+        trx('reservations').select("*").where({ reservation_id }).update({ status: "seated" }),
+      ])
+    })
+  }
+
 function destroy(reservation_id){
     return knex("tables").where({ reservation_id }).update("reservation_id", null);
 }
+
+async function finishTablesAndReservations(reservation_id) {
+    await knex.transaction(async (trx) => {
+      const [table, reservation] = await Promise.all([
+        trx('tables').where({ reservation_id }).update("reservation_id", null),
+        trx('reservations').where({ reservation_id }).update({ status: "finished" }),
+      ])
+    })
+  }
 
 module.exports = {
     list,
@@ -33,4 +51,6 @@ module.exports = {
     create,
     update,
     destroy,
+    updateTablesAndReservations,
+    finishTablesAndReservations
 }

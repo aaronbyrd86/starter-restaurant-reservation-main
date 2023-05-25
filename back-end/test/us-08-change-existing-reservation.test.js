@@ -59,6 +59,8 @@ describe("US-08 - Change an existing reservation", () => {
         ([key, value]) => (reservation[key] = value)
       );
 
+      console.log(`****************************${Object.keys(reservation)}****************************`)
+
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")

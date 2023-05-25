@@ -81,6 +81,16 @@ async function validateUpdateData(req, res, next) {
     })
   }
 
+  //reservation is already seated
+  if(Object.keys(reservation).includes("status")){
+    if(reservation.status === "seated") {
+      return next({
+        status: 400,
+        message: `Reservation ${reservation_id} is already seated`
+      })
+    }
+  }
+
   //table does not have capacity
   const tableCap = res.locals.table.capacity;
   const reservationCap = reservation.people;
@@ -99,6 +109,8 @@ async function validateUpdateData(req, res, next) {
       message: `The table is already occupied`
     })
   }
+
+  res.locals.reservation = reservation;
 
   next();
 }
@@ -126,9 +138,14 @@ async function update(req, res, next) {
     reservation_id: reservation_id,
   };
 
-  const updatedRecord = await tablesService.update(updatedTable);
+  
 
-  res.json({ data: updatedRecord });
+  // const updatedRecord = await tablesService.update(updatedTable);
+  
+
+  // res.json({ data: updatedRecord });
+  await tablesService.updateTablesAndReservations(updatedTable, reservation_id)
+  res.sendStatus(200);
 }
 
 async function destroy(req, res, next) {
@@ -141,7 +158,9 @@ async function destroy(req, res, next) {
       message: `Table is not occupied`
     })
 
-  await tablesService.destroy(reservation_id);
+  // await tablesService.destroy(reservation_id);
+
+  await tablesService.finishTablesAndReservations(reservation_id);
 
   res.sendStatus(200);
 }

@@ -4,9 +4,14 @@ function list() {
   return knex("reservations").select("*").orderBy("reservation_time");
 }
 
+
 function listDate(reservation_date) {
-  return knex("reservations").where({ reservation_date }).orderBy("reservation_time");
-}
+    return knex("reservations")
+      .whereNot("status", "finished")
+      .orWhere("status", null)
+      .andWhere({ reservation_date })
+      .orderBy("reservation_time");
+  }
 
 function listNumber(mobile_number) {
   return knex("reservations")
@@ -28,28 +33,18 @@ function read(reservation_id) {
   return knex("reservations").where({ reservation_id }).first();
 }
 
-// function destroy (review_id) {
-//     return knex("reviews").where({ "review_id": review_id}).del();
-// }
-
-// function update (updatedReview) {
-//     console.log(updatedReview)
-//     return knex("reviews")
-//     .where({ review_id: updatedReview.review_id })
-//     .update(updatedReview, "*")
-//     .then(()=>read(updatedReview.review_id))
-//     .then(async review => {
-//         const critic = await knex("critics").select("*").where({"critic_id": review.critic_id}).first()
-//         review.critic = critic
-//         return review;
-//     })
-
-// }
+function update(updatedReservation) {
+  return knex("reservations")
+    .select("*")
+    .where({ reservation_id: updatedReservation.reservation_id })
+    .update(updatedReservation, "*");
+}
 
 module.exports = {
   list,
   listDate,
   listNumber,
   create,
-  read
+  read,
+  update,
 };
