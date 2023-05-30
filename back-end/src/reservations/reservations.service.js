@@ -5,13 +5,23 @@ function list() {
 }
 
 
-function listDate(reservation_date) {
+// function listDate(reservation_date) {
+//     return knex("reservations")
+//       .whereNot("status", "finished")
+//       .orWhere("status", null)
+//       .andWhere({ reservation_date })
+//       .orderBy("reservation_time");
+//   }
+
+  function listDate(reservation_date) {
     return knex("reservations")
-      .whereNot("status", "finished")
-      .orWhere("status", null)
-      .andWhere({ reservation_date })
+      .select("*")
+      .where({ reservation_date })
+      .andWhere("status", null)
+      .orWhere({ reservation_date })
+      .andWhereNot("status", "finished")
       .orderBy("reservation_time");
-  }
+  }  
 
 function listNumber(mobile_number) {
   return knex("reservations")

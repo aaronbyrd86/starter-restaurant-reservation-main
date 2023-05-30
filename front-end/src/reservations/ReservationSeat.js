@@ -2,16 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import ErrorAlert from "../layout/ErrorAlert";
-import { createTable, readReservation } from "../utils/api";
+import { readReservation, updateTablesAndReservations } from "../utils/api";
 import { listTables } from "../utils/api";
 
 function ReservationSeat() {
   const history = useHistory();
   const reservation_id = useParams().reservation_id;
 
-  const initialFormState = "";
-
-  const [formData, setFormData] = useState(initialFormState);
+  const [formData, setFormData] = useState("");
   const [error, setError] = useState(null);
   const [tables, setTables] = useState([]);
   const [reservation, setReservation] = useState();
@@ -19,34 +17,44 @@ function ReservationSeat() {
   useEffect(() => {
     const abortController = new AbortController();
 
-    listTables(abortController.signal).then(setTables);
-    readReservation(reservation_id, abortController.signal).then(setReservation);
+    async function loadData(){
+      const tablesResponse = await listTables(abortController.signal);
+      setTables(tablesResponse);
+
+      const reservationResponse = await readReservation(reservation_id, abortController.signal);
+      setReservation(reservationResponse);
+    }
+    loadData()
+    // listTables(abortController.signal).then(setTables);
+    // readReservation(reservation_id, abortController.signal).then(setReservation);
+
   }, [reservation_id]);
 
-  console.log(reservation);
 
   const handleChange = ({ target }) => {
     console.log(`target.value is: ${target.value}`);
     setFormData(target.value);
   };
 
-  const submitHandler = (event) => {
+
+  async function submitHandler(event) {
     event.preventDefault();
 
-    const numPeople = reservation.people;
+    const abortController = new AbortController();
+    setError(null);
 
-    console.log(numPeople);
+    const table_id = formData;
+    console.log("Seating table ID: ", table_id)
 
-    // console.log("Submitted:", formData);
+    try {
+      await updateTablesAndReservations(table_id, reservation_id,abortController.signal)
+      history.push(`/reservations?date=${reservation.reservation_date}`);
+    } catch(error) {
+      setError(error)
+    } 
 
-    // setFormData({ ...initialFormState });
-
-    // createTable(formData)
-    //   .then(() => {
-    //     history.push("/");
-    //   })
-    //   .catch(setError);
-  };
+    console.log("Submitted:", formData);
+  }
 
   function cancelHandler() {
     history.goBack();
@@ -57,7 +65,7 @@ function ReservationSeat() {
     <div>
       <ErrorAlert error={error} />
       <h2>Seating reservation {reservation_id}</h2>
-      <form>
+      <form onSubmit={submitHandler}>
         <div className="form-group">
           <label for="table_id">Please select a table</label>
           <select
@@ -76,7 +84,6 @@ function ReservationSeat() {
         </div>
         <button
           type="submit"
-          onClick={submitHandler}
           className="btn btn-primary"
         >
           Submit

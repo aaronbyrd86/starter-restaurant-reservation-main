@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useRouteMatch, Link } from "react-router-dom";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import ErrorAlert from "../layout/ErrorAlert";
 import { createTable } from "../utils/api";
@@ -16,10 +15,18 @@ function TableForm() {
   const [error, setError] = useState(null);
 
   const handleChange = ({ target }) => {
-    setFormData({
+    if(target.name === "capacity"){
+      setFormData({
+        ...formData,
+        [target.name]: parseInt(target.value),
+      });
+    }
+    else{
+      setFormData({
       ...formData,
       [target.name]: target.value,
     });
+    }
   };
 
   const submitHandler = (event) => {
@@ -37,7 +44,7 @@ function TableForm() {
   };
 
   function cancelHandler(){
-    history.push("/");
+    history.goBack();
   }
 
   return (

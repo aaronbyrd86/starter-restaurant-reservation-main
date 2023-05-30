@@ -1,12 +1,12 @@
 import React from "react";
-
 import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
-import { today } from "../utils/date-time";
-import ReservationForm from "../reservations/ReservationForm";
 import TableForm from "../tables/TableForm";
 import ReservationSeat from "../reservations/ReservationSeat";
+import SearchBox from "../search/SearchBox";
+import EditReservation from "../reservations/EditReservation";
+import CreateReservation from "../reservations/CreateReservation";
 
 /**
  * Defines all the routes for the application.
@@ -16,26 +16,41 @@ import ReservationSeat from "../reservations/ReservationSeat";
  * @returns {JSX.Element}
  */
 function Routes() {
+  
   return (
     <Switch>
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
       </Route>
+
       <Route exact={true} path="/reservations">
         <Redirect to={"/dashboard"} />
       </Route>
+      
       <Route path="/dashboard">
-        <Dashboard date={today()} />
+        <Dashboard/>
       </Route>
+
       <Route path="/reservations/new">
-        <ReservationForm/>
+        <CreateReservation />
       </Route>
+
       <Route path="/tables/new">
         <TableForm />
       </Route>
+      
       <Route path="/reservations/:reservation_id/seat">
         <ReservationSeat />
       </Route>
+      
+      <Route path="/reservations/:reservation_id/edit">
+        <EditReservation />
+      </Route>
+      
+      <Route path="/search">
+        <SearchBox />
+      </Route>
+      
       <Route>
         <NotFound />
       </Route>

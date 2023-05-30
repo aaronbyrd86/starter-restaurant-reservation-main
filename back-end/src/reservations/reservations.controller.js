@@ -120,6 +120,8 @@ function isValidTime(req, res, next) {
   const openTime = 1030;
   const lastTime = 2130;
 
+  console.log("Comparing times =>", time, lastTime);
+
   if (time < openTime) {
     return next({
       status: 400,
@@ -182,7 +184,6 @@ async function reservationExists(req, res, next) {
  * List handler for reservation resources
  */
 async function list(req, res) {
-  console.log(req.query.date);
   if (req.query.date) {
     const data = await reservationsService.listDate(req.query.date);
     res.json({ data });
@@ -212,6 +213,7 @@ async function create(req, res, next) {
       people,
     },
   } = req.body;
+  //manually sets status to booked
   const newReservation = {
     first_name,
     last_name,
@@ -219,6 +221,7 @@ async function create(req, res, next) {
     reservation_date,
     reservation_time,
     people,
+    status: "booked"
   };
   const newRecord = await reservationsService.create(newReservation);
   res.status(201).json({ data: newRecord });

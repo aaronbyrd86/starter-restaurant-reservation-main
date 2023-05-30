@@ -4,7 +4,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
 const hasRequiredProperties = hasProperties("table_name", "capacity");
 
-const VALID_PROPERTIES = ["table_name", "capacity"];
+const VALID_PROPERTIES = ["table_name", "capacity", "reservation_id"];
 
 function hasOnlyValidProperties(req, res, next) {
   const { data = {} } = req.body;
@@ -138,14 +138,8 @@ async function update(req, res, next) {
     reservation_id: reservation_id,
   };
 
-  
-
-  // const updatedRecord = await tablesService.update(updatedTable);
-  
-
-  // res.json({ data: updatedRecord });
   await tablesService.updateTablesAndReservations(updatedTable, reservation_id)
-  res.sendStatus(200);
+  res.status(200).json({ data: "update successful"});
 }
 
 async function destroy(req, res, next) {
@@ -158,11 +152,9 @@ async function destroy(req, res, next) {
       message: `Table is not occupied`
     })
 
-  // await tablesService.destroy(reservation_id);
-
   await tablesService.finishTablesAndReservations(reservation_id);
 
-  res.sendStatus(200);
+  res.status(200).json({ data: "successfully finished reservation"});
 }
 
 module.exports = {
