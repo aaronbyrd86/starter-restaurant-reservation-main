@@ -74,5 +74,7 @@ DELETE sets the `reservation_id` for the given table to `null`
 
 The dashboard page displays a list of all reservations and tables
 
+![](screenshots/s1.png)
+
 
 
