@@ -64,7 +64,7 @@ function TableForm() {
           <label htmlFor="capacity">Capacity</label>
           <input
             onChange={handleChange}
-            type="text"
+            type="number"
             name="capacity"
             value={formData.capacity}
           />
