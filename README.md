@@ -72,9 +72,11 @@ PUT requires a JSON object and sets the table's `reservation_id` to the given re
 ```
 DELETE sets the `reservation_id` for the given table to `null`
 
-The dashboard page displays a list of all reservations and tables
+The dashboard page displays a list of all tables and all reservations for a given date (eg /dashboard?date=2023-31-05) if no date is given the date will be today
 
 ![](screenshots/s1.png)
+
+The side nav bar allows navigation to pages for creating or searching reservations and creating a new table
 
 
 
