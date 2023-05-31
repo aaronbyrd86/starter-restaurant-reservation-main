@@ -27,7 +27,7 @@ function ReservationForm({handleChange, submitHandler, cancelHandler, initialFor
             <label htmlFor="mobile_number">Mobile Number</label>
             <input
               onChange={handleChange}
-              type="text"
+              type="tel"
               name="mobile_number"
               value={initialFormData.mobile_number}
             />

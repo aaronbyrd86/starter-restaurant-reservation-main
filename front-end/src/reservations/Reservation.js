@@ -15,6 +15,7 @@ function Reservation({ reservation, cancelHandler }) {
     
     if(cancelHandler(reservation.reservation_id)){
       setCancelled(!cancelled);
+      setStatus("cancelled");
     }
   }
 
@@ -29,15 +30,10 @@ function Reservation({ reservation, cancelHandler }) {
         <p>Date: {reservation.reservation_date}</p>
         <p>Time: {reservation.reservation_time}</p>
         <p>People: {reservation.people}</p>
-        {
-          status === "finished"
-          ? <p data-reservation-id-status={reservation.reservation_id}></p>
-          : <p data-reservation-id-status={reservation.reservation_id}>Current status: {reservation.status}</p>
-        }
-
-        { reservation.status === "booked" ? (<a href={`/reservations/${reservation.reservation_id}/seat`}><button type="submit">Seat</button></a>) :(<p></p>) }
-        { reservation.status === "booked" ? (<a href={`/reservations/${reservation.reservation_id}/edit`}><button>Edit</button></a>) :(<p></p>) }
-        { cancelled 
+        <p data-reservation-id-status={reservation.reservation_id}>Current status: {status}</p>
+        { status === "booked" ? (<a href={`/reservations/${reservation.reservation_id}/seat`}><button type="submit">Seat</button></a>) :(<p></p>) }
+        { status === "booked" ? (<a href={`/reservations/${reservation.reservation_id}/edit`}><button>Edit</button></a>) :(<p></p>) }
+        { cancelled || reservation.status === "finished"
         ? <p></p>
         : <button onClick={setToCanceled} data-reservation-id-cancel={reservation.reservation_id}>Cancel</button> 
         }

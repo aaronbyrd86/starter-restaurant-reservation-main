@@ -42,9 +42,10 @@ function hasOnlyValidProperties(req, res, next) {
 }
 
 function inputIsValid(req, _res, next) {
-  const { reservation_date, reservation_time, people, status } = req.body.data;
+  const { reservation_date, reservation_time, people, status, mobile_number } = req.body.data;
   const dateRegex = /^\d{4}\-\d{1,2}\-\d{1,2}$/;
   const timeRegex = /[0-9]{2}:[0-9]{2}/;
+  const phoneRegex = /[0-9]{3}-[0-9]{3}-[0-9]{4}/;
 
   //status of a new reservation 'booked'
   if (status === "seated" || status === "finished") {
@@ -65,6 +66,13 @@ function inputIsValid(req, _res, next) {
     return next({
       status: 400,
       message: `reservation_time "${reservation_time}" is not a valid time`,
+    });
+  }
+
+  if (!phoneRegex.test(mobile_number)) {
+    return next({
+      status: 400,
+      message: `mobile_number "${mobile_number}" is not a valid number`,
     });
   }
 

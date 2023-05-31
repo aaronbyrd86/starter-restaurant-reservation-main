@@ -68,7 +68,6 @@ function Dashboard() {
           const reservationsResponse = await listReservations({
             date: currentDate,
           });
-          console.log("Finish handler list reservations", reservationsResponse);
           setReservations(reservationsResponse);
         } catch (listError) {
           setReservationsError(listError);

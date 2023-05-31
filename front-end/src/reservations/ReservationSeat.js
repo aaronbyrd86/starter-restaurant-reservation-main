@@ -67,7 +67,7 @@ function ReservationSeat() {
       <h2>Seating reservation {reservation_id}</h2>
       <form onSubmit={submitHandler}>
         <div className="form-group">
-          <label for="table_id">Please select a table</label>
+          <label htmlFor="table_id">Please select a table</label>
           <select
             id="table_id"
             name="table_id"
